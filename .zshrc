@@ -69,7 +69,7 @@ source /home/anusha/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # ZSH SYNTAX HIGHLIGHT CUSTOMIZATIONS
 
 ZSH_HIGHLIGHT_STYLES[alias]=fg=$blue_green,bold
-ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=$ruby_red,bold
+ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=$ruby_red
 ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=$golden,underline
 ZSH_HIGHLIGHT_STYLES[precommand]=fg=$golden,underline
 ZSH_HIGHLIGHT_STYLES[arg0]=fg=$golden
