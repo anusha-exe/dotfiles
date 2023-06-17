@@ -28,6 +28,7 @@ alias c='clear'
 alias p='echo'
 alias vimconf='vim ~/.vimrc'
 alias zconf='vim ~/.zshrc'
+alias aweconf='vim ~/.config/awesome/rc.lua'
 
 # GIT CONFIGS
 
