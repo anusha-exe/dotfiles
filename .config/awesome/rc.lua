@@ -83,20 +83,21 @@ awful.layout.layouts = {
 -- {{{ Menu
 -- Create a launcher widget and a main menu
 myawesomemenu = {
-   { "Hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
-   { "Manual", terminal .. " -e man awesome" },
-   { "Edit Config", editor_cmd .. " " .. awesome.conffile },
-   { "Restart", awesome.restart },
-   { "Quit", function() awesome.quit() end },
+   { " Hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
+   { " Manual", terminal .. " -e man awesome" },
+   { " Edit Config", editor_cmd .. " " .. awesome.conffile },
+   { " Restart", awesome.restart },
+   { " Quit", function() awesome.quit() end },
 }
 
-mymainmenu = awful.menu({ items = { { "Terminal", terminal },
-                                    { "Browser", "firefox"},
-                                    { "Editor", editor_cmd .. " "},
-                                    { "AwesomeWM", myawesomemenu },
+-- beautiful.menu_bg_normal="#374247"
+mymainmenu = awful.menu({ items = { { " Terminal", terminal },
+                                    { " Browser", "firefox"},
+                                    { " Editor", editor_cmd .. " "},
+                                    { " AwesomeWM ", myawesomemenu },
                                   }
                         })
-
+--  
 mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
                                      menu = mymainmenu })
 
@@ -565,6 +566,8 @@ client.connect_signal("focus", function(c) c.border_color = beautiful.border_foc
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
+-- Adding Gaps
+beautiful.useless_gap=10
 -- AutoStart Apps
 awful.spawn.with_shell("nitrogen --restore")
 awful.spawn.with_shell("picom")
