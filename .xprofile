@@ -1,0 +1,12 @@
+#!/bin/zsh
+
+#xrandr and arandr
+
+#gtf 1366 768 60 was the command
+# 1368x768 @ 60.00 Hz (GTF) hsync: 47.70 kHz; pclk: 85.86 MHz
+# Modeline "1368x768_60.00"  85.86  1368 1440 1584 1800  768 769 772 795  -HSync +Vsync
+
+
+xrandr --newmode "1366x768_60.00" 85.86  1368 1440 1584 1800  768 769 772 795  -HSync +Vsync
+xrandr --addmode Virtual-1 "1366x768_60.00"
+xrandr --output Virtual-1 --primary --mode "1366x768_60.00" --pos 0x0 --rotate normal
