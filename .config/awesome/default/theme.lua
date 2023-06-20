@@ -11,21 +11,36 @@ local themes_path = gfs.get_themes_dir()
 
 local theme = {}
 
-theme.font          = "sans 8"
+-- fonts
+theme.font          = "CaskaydiaCove Nerd Font 10"
 
-theme.bg_normal     = "#1d1f21"
-theme.bg_focus      = "#535d6c"
+local kensett_blue = "#a4b1b7"
+local kensett_black = "#151720"
+local proc2_bg = "#1F1930"
+local proc2_fg = "#d5ad67"
+local focus_bg = "#d8cbc2"
+local focus_fg = kensett_black
+local marine_blue = "#476e68"
+local byzantine_purple = "#5F1759"
+local russian_violet = "#3C1646"
+-- backgrounds
+-- theme.bg_normal     = "#a4b1b7"
+theme.bg_normal = proc2_bg
+theme.bg_focus      = focus_bg
 theme.bg_urgent     = "#ff0000"
-theme.bg_minimize   = "#444444"
+theme.bg_minimize   = russian_violet
 theme.bg_systray    = theme.bg_normal
 
-theme.fg_normal     = "#c5c8c6"
-theme.fg_focus      = "#b5bd68"
+-- foregrounds
+theme.fg_normal     = proc2_fg
+theme.fg_focus      = focus_fg
 theme.fg_urgent     = "#ffffff"
-theme.fg_minimize   = "#ffffff"
+theme.fg_minimize   = proc2_fg
 
+-- gaps and borders
 theme.useless_gap   = dpi(10)
-theme.border_width  = dpi(1)
+theme.border_width  = dpi(0)
+-- theme.border_radius = dpi(10)
 theme.border_normal = "#bcc9ef"
 theme.border_focus  = "#8eaaef"
 theme.border_marked = "#85678f"
@@ -42,6 +57,15 @@ theme.border_marked = "#85678f"
 -- hotkeys_[bg|fg|border_width|border_color|shape|opacity|modifiers_fg|label_bg|label_fg|group_margin|font|description_font]
 -- Example:
 --theme.taglist_bg_focus = "#ff0000"
+
+-- tasklist
+theme.tasklist_plain_task_name = true
+theme.tasklist_bg = theme.bg_normal
+
+-- systray
+theme.systray_icon_spacing = dpi(12)
+theme.systray_max_rows = 7
+
 
 -- Generate taglist squares:
 local taglist_square_size = dpi(4)
@@ -61,14 +85,20 @@ theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
 -- Variables set for theming the menu:
 -- menu_[bg|fg]_[normal|focus]
 -- menu_[border_color|border_width]
+
+-- menu
 theme.menu_submenu_icon = themes_path.."default/submenu.png"
-theme.menu_height = dpi(20)
-theme.menu_width  = dpi(200)
+theme.menu_height = dpi(30)
+theme.menu_width  = dpi(180)
+theme.menu_border_width = dpi(0)
+-- theme.menu_border_radius = dpi(20)
+-- theme.menu_border_color = "#bcc9ef"
 -- theme.menu_opacity = 1.0
-theme.menu_bg_normal = "#374247"
+theme.menu_bg_normal = "#151720"
 theme.menu_bg_focus = "#decec2"
 theme.menu_fg_normal = "#decec2"
-theme.menu_fg_focus = "#374247"
+theme.menu_fg_focus = "#151720"
+-- theme.menu_font = "Iosevka Term 12" 
 
 -- You can add as many variables as
 -- you wish and access them by using
@@ -92,6 +122,11 @@ theme.titlebar_sticky_button_focus_inactive  = themes_path.."default/titlebar/st
 theme.titlebar_sticky_button_normal_active = themes_path.."default/titlebar/sticky_normal_active.png"
 theme.titlebar_sticky_button_focus_active  = themes_path.."default/titlebar/sticky_focus_active.png"
 
+-- Housemouse stuff
+theme.taglist_font = "CaskaydiaCove Nerd Font 9"
+
+
+
 theme.titlebar_floating_button_normal_inactive = themes_path.."default/titlebar/floating_normal_inactive.png"
 theme.titlebar_floating_button_focus_inactive  = themes_path.."default/titlebar/floating_focus_inactive.png"
 theme.titlebar_floating_button_normal_active = themes_path.."default/titlebar/floating_normal_active.png"
@@ -103,7 +138,7 @@ theme.titlebar_maximized_button_normal_active = themes_path.."default/titlebar/m
 theme.titlebar_maximized_button_focus_active  = themes_path.."default/titlebar/maximized_focus_active.png"
 
 -- theme.wallpaper = themes_path.."default/background.png"
-theme.wallpaper = "/home/anusha/Downloads/lake-george-by-kensett.jpg"
+theme.wallpaper = "/home/anusha/Downloads/proc2.jpg"
 
 -- You can use your own layout icons like this:
 theme.layout_fairh = themes_path.."default/layouts/fairhw.png"

@@ -13,6 +13,7 @@ syntax on
 set termguicolors
 colorscheme sorbet
 let g:airline_theme = 'catppuccin_mocha'
+
 " For changing the cursor type in different modes
 let &t_SI = "\e[6 q"
 let &t_EI = "\e[2 q"
@@ -46,16 +47,30 @@ set hlsearch
 :	autocmd BufLeave,FocusLost,InsertEnter,WinLeave	  * if &nu | set nornu	| endif
 :augroup END
 
+let c='a'
+while c<='z'
+    exec "set <A-".c.">=\e".c
+    exec "imap \e".c." <A-".c.">"
+    let c = nr2char(1+char2nr(c))
+endw
+
 " Key-bindings
 nnoremap <F5> :NERDTreeToggle<CR> 
-nnoremap <C-Left> :bp<CR> 
-nnoremap <C-Right> :bn<CR> 
+" shift between buffers
+nnoremap <leader><Right> :bp<CR> 
+nnoremap <leader><Left> :bn<CR> 
+" move between vsplit or split panels
+nnoremap <A-h> <C-w>h
+nnoremap <A-j> <C-w>j
+nnoremap <A-k> <C-w>k
+nnoremap <A-l> <C-w>l
+
 inoremap jk <Esc>
 nnoremap <leader>9 $
 nnoremap <Esc>/ :noh<CR>
 
-nnoremap <C-Left> :bp<CR>
-nnoremap <C-Right> :bn<CR>
+" nnoremap <C-Left> :bp<CR>
+" nnoremap <C-Right> :bn<CR>
 
 nmap <C-_> gcc 
 vmap <C-_> gc
