@@ -8,6 +8,15 @@ autoload -U compinit && compinit
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
 zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
 
+# Different colors based on filetypes
+eval "$(dircolors)"
+# Pagination for long lists of files
+export COLUMNS # for subprocesses to know the number of columns on the screen
+
+function ls {
+    command ls -F -h --color=always -v --author --time-style=long-iso -C "$@" | less -R -X -F
+}
+
 ## CLEARING DUPLICATE SEARCH HISTORY
 
 HISTSIZE=2000
@@ -24,11 +33,17 @@ setopt hist_find_no_dups
 
 # ALIASES
 
+## LS aliases
+
+alias ll='ls -l'
+alias la='ls -l -a'
+
 alias c='clear'
 alias p='echo'
 alias vimconf='vim ~/.vimrc'
 alias zconf='vim ~/.zshrc'
 alias aweconf='vim ~/.config/awesome/rc.lua'
+alias tconf='vim ~/.config/awesome/default/theme.lua'
 
 # GIT CONFIGS
 
@@ -57,11 +72,17 @@ blue_green='#75E6DA'
 lavender='#CF9FFF'
 plum='#CF268A'
 plush='#E65C9C'
+slate_blue='#6A5ACD'
+plumm='#dda0dd'
+purple='#c83fa9'
+light_pink='#f3b0dc'
+some_blue='#b6c0cc'
+proc2_fg='#d5ad67'
 
 # PROMPT SETUP
-cmd_check="%(?.%F{$golden}(^_^)%f.%F{$ruby_red}(O_O%)%f)" #ternary: %(?.either.or)
+cmd_check="%(?.%F{$light_pink}(^_^)%f.%F{$golden}(O_O%)%f)" #ternary: %(?.either.or)
 setopt PROMPT_SUBST
-PS1='$cmd_check %{%F{$neon_aqua}%}%n (%1~)%f%{%F{85}%}$(parse_git_branch)%f %F{$sea_green}[%u@%h:%w]\%f '
+PS1='$cmd_check %{%F{$proc2_fg}%}[%1~]%f%{%F{85}%}$(parse_git_branch)%f %F{$some_blue}%u@%h \%f '
 
 #export NVM_DIR="/home/titli/.nvm"
 #[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -70,10 +91,10 @@ source /home/anusha/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # ZSH SYNTAX HIGHLIGHT CUSTOMIZATIONS
 
 ZSH_HIGHLIGHT_STYLES[alias]=fg=$blue_green,bold
-ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=$ruby_red
-ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=$golden,underline
-ZSH_HIGHLIGHT_STYLES[precommand]=fg=$golden,underline
-ZSH_HIGHLIGHT_STYLES[arg0]=fg=$golden
+ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=$golden
+ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=$light_pink,underline
+ZSH_HIGHLIGHT_STYLES[precommand]=fg=$light_pink,underline
+ZSH_HIGHLIGHT_STYLES[arg0]=fg=$light_pink
 ZSH_HIGHLIGHT_STYLES[reserved-word]=fg=$plush
 ZSH_HIGHLIGHT_STYLES[single-quoted-argument]=fg=$sky_blue
 ZSH_HIGHLIGHT_STYLES[double-quoted-argument]=fg=$sky_blue
