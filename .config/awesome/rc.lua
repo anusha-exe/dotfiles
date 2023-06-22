@@ -283,7 +283,12 @@ globalkeys = gears.table.join(
               {description = "reload awesome", group = "awesome"}),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit,
               {description = "quit awesome", group = "awesome"}),
--- for now since modkey +l locks the window
+    -- Running specific apps
+    -- for now since modkey +l locks the window
+    awful.key({ modkey }, "b", function () awful.spawn{ "firefox" } end,
+              { description = "open default browser firefox", group = "start apps"}),
+    awful.key({ modkey }, "r", function () awful.spawn.with_shell("rofi -show drun") end,
+              { description = "open app launcher rofi", group = "launcher"}),
     awful.key({ modkey,           }, "a",     function () awful.tag.incmwfact( 0.05)          end,
               {description = "increase master width factor", group = "layout"}),
     awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)          end,
@@ -314,8 +319,8 @@ globalkeys = gears.table.join(
               {description = "restore minimized", group = "client"}),
 
     -- Prompt
-    awful.key({ modkey },            "r",     function () awful.screen.focused().mypromptbox:run() end,
-              {description = "run prompt", group = "launcher"}),
+    -- awful.key({ modkey },            "r",     function () awful.screen.focused().mypromptbox:run() end,
+    --           {description = "run prompt", group = "launcher"}),
 
     awful.key({ modkey }, "x",
               function ()
@@ -343,6 +348,8 @@ clientkeys = gears.table.join(
               {description = "close", group = "client"}),
     awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ,
               {description = "toggle floating", group = "client"}),
+    awful.key({ modkey, "Shift" }, "t", awful.titlebar.toggle                ,                
+              {description = "toggle titlebar", group = "client"}),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
               {description = "move to master", group = "client"}),
     awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
@@ -492,9 +499,9 @@ awful.rules.rules = {
       }, properties = { floating = true }},
 
     -- Add titlebars to normal clients and dialogs
-    -- { rule_any = {type = {"normal", "dialog" }
-    --   }, properties = { titlebars_enabled = true  }
-    -- },
+    { rule_any = {type = {"normal", "dialog" }
+      }, properties = { titlebars_enabled = false  }
+    },
     -- Set Firefox to always map on the tag named "2" on screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { screen = 1, tag = "2" } },
