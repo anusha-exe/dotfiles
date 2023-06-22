@@ -46,65 +46,43 @@ end
 -- }}}
 
 -- {{{ Variable definitions
+-- Adding module for user variables definitions
+_G = {} -- Global namespace put on top to use the module
+_G.user_vars = require('main.user-variables')
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init("/home/anusha/.config/awesome/default/theme.lua")
-
 -- This is used later as the default terminal and editor to run.
-terminal = "alacritty"
-editor = os.getenv("EDITOR") or "vim"
+terminal = _G.user_vars.terminal
+editor = _G.user_vars.editor
 editor_cmd = terminal .. " -e " .. editor
+modkey = _G.user_vars.modkey
+browser = _G.user_vars.browser
+app_launcher = _G.user_vars.launcher
 
--- Default modkey.
--- Usually, Mod4 is the key with a logo between Control and Alt.
--- If you do not like this or do not have such a key,
--- I suggest you to remap Mod4 to another key using xmodmap or other tools.
--- However, you can use another modifier like Mod1, but it may interact with others.
-modkey = "Mod4"
-
--- Table of layouts to cover with awful.layout.inc, order matters.
-awful.layout.layouts = {
-    -- awful.layout.suit.floating,
-    awful.layout.suit.tile,
-    -- awful.layout.suit.tile.left,
-    -- awful.layout.suit.tile.bottom,
-    -- awful.layout.suit.tile.top,
-    -- awful.layout.suit.fair,
-    -- awful.layout.suit.fair.horizontal,
-    -- awful.layout.suit.spiral,
-    -- awful.layout.suit.spiral.dwindle,
-    -- awful.layout.suit.max,
-    -- awful.layout.suit.max.fullscreen,
-    -- awful.layout.suit.magnifier,
-    -- awful.layout.suit.corner.nw,
-    -- awful.layout.suit.corner.ne,
-    -- awful.layout.suit.corner.sw,
-    -- awful.layout.suit.corner.se,
+local main = {
+  layouts = require("main.layouts"),
+  tags = require("main.tags"),
+  menu = require("main.menu"),
+  rules = require("main.rules"),
+  signals = require("main.signals"),
 }
+
+-- Layouts
+_G.layouts = main.layouts()
+
 -- }}}
 
--- {{{ Menu
--- Create a launcher widget and a main menu
-myawesomemenu = {
-   { " Hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
-   { " Manual", terminal .. " -e man awesome" },
-   { " Edit Config", editor_cmd .. " " .. awesome.conffile },
-   { " Restart", awesome.restart },
-   { " Quit", function() awesome.quit() end },
-}
+-- Tags
+_G.tags = main.tags()
 
--- beautiful.menu_bg_normal="#374247"
-mymainmenu = awful.menu({ items = { { " Terminal", terminal },
-                                    { " Browser", "firefox"},
-                                    { " Editor", editor_cmd .. " "},
-                                    { " AwesomeWM ", myawesomemenu },
-                                  }
-                        })
+-- {{{ Menu
+_G.mainmenu = awful.menu({ items = main.menu() })
 --  
-mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
-                                     menu = mymainmenu })
+_G.launcher = awful.widget.launcher({ image = beautiful.awesome_icon,
+                                     menu = _G.mainmenu })
 
 -- Menubar configuration
-menubar.utils.terminal = terminal -- Set the terminal for applications that require it
+menubar.utils.terminal = _G.user_vars.terminal -- Set the terminal for applications that require it
 -- }}}
 
 -- Keyboard map indicator and switcher
@@ -173,9 +151,6 @@ awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
     set_wallpaper(s)
 
-    -- Each screen has its own tag table.
-    awful.tag({  "1", "2", "3", "4", "5" }, s, awful.layout.layouts[1])
-
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
     -- Create an imagebox widget which will contain an icon indicating which layout we're using.
@@ -211,11 +186,13 @@ awful.screen.connect_for_each_screen(function(s)
     }
 
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, height = dpi(24), border_width = dpi(6),
+    local bar_offset = 6
+    s.mywibox = awful.wibar({ position = "top", screen = s, width = s.geometry.width - (2 * bar_offset), border_width = dpi(0),
 		border_color = "#00000000", shape = function (cr, w, h)
-  gears.shape.rounded_rect(cr, w, h, 12)
+  gears.shape.rounded_rect(cr, w, h, 2)
 end})
-
+s.mywibox.x = bar_offset
+s.mywibox.y = bar_offset 
 -- .wibox.shape = function (cr, w, h)
 --   gears.shape.rounded_rect(cr, w, h, 4)
 -- end
@@ -234,7 +211,7 @@ end})
             mykeyboardlayout,
             wibox.widget.systray(),
             mytextclock,
-            -- s.mylayoutbox,
+            s.mylayoutbox,
         },
     }
 end)
@@ -242,7 +219,7 @@ end)
 
 -- {{{ Mouse bindings
 root.buttons(gears.table.join(
-    awful.button({ }, 3, function () mymainmenu:toggle() end),
+    awful.button({ }, 3, function () _G.mainmenu:toggle() end),
     awful.button({ }, 4, awful.tag.viewnext),
     awful.button({ }, 5, awful.tag.viewprev)
 ))
@@ -271,7 +248,7 @@ globalkeys = gears.table.join(
         end,
         {description = "focus previous by index", group = "client"}
     ),
-    awful.key({ modkey,           }, "w", function () mymainmenu:show() end,
+    awful.key({ modkey,           }, "w", function () _G.mainmenu:show() end,
               {description = "show main menu", group = "awesome"}),
 
     -- Layout manipulation
@@ -303,9 +280,9 @@ globalkeys = gears.table.join(
               {description = "quit awesome", group = "awesome"}),
     -- Running specific apps
     -- for now since modkey +l locks the window
-    awful.key({ modkey }, "b", function () awful.spawn{ "firefox" } end,
+    awful.key({ modkey }, "b", function () awful.spawn(browser) end,
               { description = "open default browser firefox", group = "start apps"}),
-    awful.key({ modkey }, "r", function () awful.spawn.with_shell("rofi -show drun") end,
+    awful.key({ modkey }, "r", function () awful.spawn.with_shell(app_launcher) end,
               { description = "open app launcher rofi", group = "launcher"}),
     awful.key({ modkey,           }, "a",     function () awful.tag.incmwfact( 0.05)          end,
               {description = "increase master width factor", group = "layout"}),
@@ -349,10 +326,10 @@ globalkeys = gears.table.join(
                     history_path = awful.util.get_cache_dir() .. "/history_eval"
                   }
               end,
-              {description = "lua execute prompt", group = "awesome"}),
+              {description = "lua execute prompt", group = "awesome"}) -- add comma if you want to uncomment menubar
     -- Menubar
-    awful.key({ modkey }, "p", function() menubar.show() end,
-              {description = "show the menubar", group = "launcher"})
+    -- awful.key({ modkey }, "p", function() menubar.show() end,
+              -- {description = "show the menubar", group = "launcher"})
 )
 
 clientkeys = gears.table.join(
@@ -404,6 +381,7 @@ clientkeys = gears.table.join(
 -- Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it work on any keyboard layout.
 -- This should map on the top row of your keyboard, usually 1 to 9.
+
 for i = 1, 9 do
     globalkeys = gears.table.join(globalkeys,
         -- View tag only.
@@ -469,78 +447,11 @@ clientbuttons = gears.table.join(
 root.keys(globalkeys)
 -- }}}
 
--- {{{ Rules
+-- Rules
 -- Rules to apply to new clients (through the "manage" signal).
-awful.rules.rules = {
-    -- All clients will match this rule.
-    { rule = { },
-      properties = { border_width = beautiful.border_width,
-                     border_color = beautiful.border_normal,
-                     focus = awful.client.focus.filter,
-                     raise = true,
-                     keys = clientkeys,
-                     buttons = clientbuttons,
-                     screen = awful.screen.preferred,
-                     placement = awful.placement.no_overlap+awful.placement.no_offscreen
-     }
-    },
+awful.rules.rules = main.rules(clientkeys, clientbuttons)
 
-    -- Floating clients.
-    { rule_any = {
-        instance = {
-          "DTA",  -- Firefox addon DownThemAll.
-          "copyq",  -- Includes session name in class.
-          "pinentry",
-        },
-        class = {
-          "Arandr",
-          "Blueman-manager",
-          "Gpick",
-          "Kruler",
-          "MessageWin",  -- kalarm.
-          "Sxiv",
-          "Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
-          "Wpa_gui",
-          "veromix",
-          "xtightvncviewer"},
-
-        -- Note that the name property shown in xprop might be set slightly after creation of the client
-        -- and the name shown there might not match defined rules here.
-        name = {
-          "Event Tester",  -- xev.
-        },
-        role = {
-          "AlarmWindow",  -- Thunderbird's calendar.
-          "ConfigManager",  -- Thunderbird's about:config.
-          "pop-up",       -- e.g. Google Chrome's (detached) Developer Tools.
-        }
-      }, properties = { floating = true }},
-
-    -- Add titlebars to normal clients and dialogs
-    { rule_any = {type = {"normal", "dialog" }
-      }, properties = { titlebars_enabled = false  }
-    },
-    -- Set Firefox to always map on the tag named "2" on screen 1.
-    -- { rule = { class = "Firefox" },
-    --   properties = { screen = 1, tag = "2" } },
-}
--- }}}
-
--- {{{ Signals
--- Signal function to execute when a new client appears.
-client.connect_signal("manage", function (c)
-    -- Set the windows at the slave,
-    -- i.e. put it at the end of others instead of setting it master.
-    -- if not awesome.startup then awful.client.setslave(c) end
-
-    if awesome.startup
-      and not c.size_hints.user_position
-      and not c.size_hints.program_position then
-        -- Prevent clients from being unreachable after screen count changes.
-        awful.placement.no_offscreen(c)
-    end
-end)
-
+-- Titlebar Signals
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
 client.connect_signal("request::titlebars", function(c)
     -- buttons for the titlebar
