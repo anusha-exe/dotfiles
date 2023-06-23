@@ -7,7 +7,8 @@ local wibox = require("wibox")
 
 -- Theme handling library
 local beautiful = require("beautiful")
-
+-- Custom Local Library: Common Functional Decoration
+require("ui.titlebar")
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 -- Signal function to execute when a new client appears.
